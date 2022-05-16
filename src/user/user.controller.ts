@@ -1,34 +1,38 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { UserService } from './user.service';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UserLoginDto } from './dto/user-login.dto';
+import { VerifyEmailDto } from './dto/verify-email.dto';
+import { UserService } from './user.service';
+import { UserInfo } from './UserInfo';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  async createUser(@Body() dto : CreateUserDto): Promise<void>{
+    const {name, email, password } = dto;
+    console.log(dto);
+    await this.userService.createUser(name,email,password);
   }
 
-  @Get()
-  findAll() {
-    return this.userService.findAll();
+  @Post('/email-verify')
+    async verifyEmail(@Query() dto : VerifyEmailDto): Promise<string> {
+        const { signupVerifyToken } = dto;
+
+        return await this.userService.verifyEmail(signupVerifyToken);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  @Post('/login')
+  async login(@Body() dto: UserLoginDto): Promise<string>{
+      const{ email, password } = dto;
+
+      return await this.userService.login(email,password);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  @Get('/:id')
+  async getUserInfo(@Param('id') userId: string): Promise<UserInfo>{
+    return await this.userService.getUserInfo(userId);
   }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
-  }
+    
 }
