@@ -10,17 +10,18 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  async createUser(@Body() dto : CreateUserDto): Promise<void>{
+  async createUser(@Body() dto:CreateUserDto): Promise<void>{
     const {name, email, password } = dto;
     console.log(dto);
     await this.userService.createUser(name,email,password);
+    
   }
 
   @Post('/email-verify')
-    async verifyEmail(@Query() dto : VerifyEmailDto): Promise<string> {
-        const { signupVerifyToken } = dto;
+  async verifyEmail(@Query() dto : VerifyEmailDto): Promise<string> {
+      const { signupVerifyToken } = dto;
 
-        return await this.userService.verifyEmail(signupVerifyToken);
+      return await this.userService.verifyEmail(signupVerifyToken);
   }
 
   @Post('/login')

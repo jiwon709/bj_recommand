@@ -7,12 +7,12 @@ import { UserInfo } from './UserInfo';
 export class UserService {
     constructor(private emailService : EmailService){}
     async createUser(name : string, email : string, password : string){
-        // await this.checkUserExist(email);
+        await this.checkUserExist(email);
 
-        // const signupVerifyToken = uuid.v1();
+        const signupVerifyToken = uuid.v1();
 
-        // await this.saveUser(name, email, password, signupVerifyToken);
-        // await this.sendMemberJoinEmail(email, signupVerifyToken);
+        await this.saveUser(name, email, password, signupVerifyToken);
+        await this.sendMemberJoinEmail(email, signupVerifyToken);
     }
 
     async verifyEmail(signupVerifyToken: string): Promise<string> {
