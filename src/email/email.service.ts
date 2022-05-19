@@ -16,8 +16,8 @@ export class EmailService {
         this. transporter = nodemailer.createTransport({
             service: 'Gmail',
             auth: {
-                user: '',
-                pass: ''
+                user: process.env.MAIL_ID,
+                pass: process.env.MAIL_PASSWAORD
             }
         });
     }
@@ -25,7 +25,7 @@ export class EmailService {
     async sendMemberJoinVerification(emailAddress: string, signupVerifyToken: string){
         const baseUrl = 'http://localhost:3000';//config
 
-        const url = `${baseUrl}/users/email-verify?signupVerifyToken=${signupVerifyToken}`;
+        const url = `${baseUrl}/user/email-verify?signupVerifyToken=${signupVerifyToken}`;
 
         const mailOptions: EmailOptions = {
             to: emailAddress,
@@ -37,6 +37,8 @@ export class EmailService {
                 </form>
             `
         }
+
+        return await this.transporter.sendMail(mailOptions);
 
     }
 
